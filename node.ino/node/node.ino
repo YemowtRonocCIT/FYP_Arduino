@@ -19,7 +19,7 @@ const int TEMP_PIN = 6;
 const int TEMP_INDEX = 1;
 OneWire oneWire(TEMP_PIN); 
 DallasTemperature sensors(&oneWire);
-TemperatureSensor temperatureSensor;
+TemperatureSensor temperatureSensor; 
 
 const int VIBRATION_PIN = A0;
 const int VIBRATION_INDEX = 2;
@@ -27,6 +27,16 @@ VibrationSensor vibrationSensor;
 
 SigfoxMessage sigfox;
 const int MAX_MESSAGE_LENGTH = 12;
+
+void heartbeatWait() {
+
+  for (int index = 0; index < 10; index++) {
+   Serial.print(".");
+   delay(TIME_MINUTE); 
+  }
+  Serial.println("");
+  
+}
 
 void setup() {
   // put your setup code here, to run once:
@@ -88,9 +98,5 @@ void loop() {
     }
   }
 
-  for (index = 0; index < 10; index++) {
-   Serial.print(".");
-   delay(TIME_MINUTE); 
-  }
-  Serial.println("");
+  heartbeatWait();
 }

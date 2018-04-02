@@ -47,6 +47,22 @@ void setup() {
   vibrationSensor.begin(VIBRATION_PIN);
 }
 
+bool checkButtonPressed(char (*status)[MAX_MESSAGE_LENGTH]) {
+  bool pressed = false;
+  char character = 'N';
+  int buttonPressed = buttonPress.isPressed();
+  
+  if (buttonPressed == 1) 
+  {
+    character = 'B';
+    pressed = true;
+  }
+
+  (*status)[BUTTON_INDEX] = character;
+  
+  return pressed;
+}
+
 void loop() {
   // put your main code here, to run repeatedly:
   delay(10 * TIME_SECOND);
@@ -58,19 +74,7 @@ void loop() {
     status[index] = '\0';
   }
   
-  {
-    int buttonPressed = buttonPress.isPressed();
-    if (buttonPressed == 1) 
-    {
-      status[BUTTON_INDEX] = 'B';
-      Serial.println("Button is pressed");
-    }
-    else 
-    {
-      status[BUTTON_INDEX] = 'N';
-      Serial.println("Button is not pressed");  
-    }
-  }
+  bool buttonPressed = checkButtonPressed(&status);
 
   {
     float temperature = temperatureSensor.readTemperatureCelsius(sensors);

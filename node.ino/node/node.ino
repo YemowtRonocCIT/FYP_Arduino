@@ -63,6 +63,13 @@ bool checkButtonPressed(char (*status)[MAX_MESSAGE_LENGTH]) {
   return pressed;
 }
 
+void checkTemperature(char (*status)[MAX_MESSAGE_LENGTH]) {
+    float temperature = temperatureSensor.readTemperatureCelsius(sensors);
+    char character = temperatureSensor.encodeTemperatureToChar(temperature);
+
+    (*status)[TEMP_INDEX] = character;
+}
+
 void loop() {
   // put your main code here, to run repeatedly:
   delay(10 * TIME_SECOND);
@@ -76,14 +83,7 @@ void loop() {
   
   bool buttonPressed = checkButtonPressed(&status);
 
-  {
-    float temperature = temperatureSensor.readTemperatureCelsius(sensors);
-    char character = temperatureSensor.encodeTemperatureToChar(temperature);
-
-    status[TEMP_INDEX] = character;
-    Serial.print("Temperature (Celsius) is: ");
-    Serial.println(temperature);
-  }
+  checkTemperature(&status);
 
   {
     float voltage = -1.00;

@@ -70,6 +70,12 @@ void checkTemperature(char (*status)[MAX_MESSAGE_LENGTH]) {
     (*status)[TEMP_INDEX] = character;
 }
 
+void checkVibration(char (*status)[MAX_MESSAGE_LENGTH]) {
+    float voltage = -1.00;
+    voltage = vibrationSensor.getVibrationReading();
+    (*status)[VIBRATION_INDEX] = vibrationSensor.convertReadingToChar(voltage);  
+}
+
 void loop() {
   // put your main code here, to run repeatedly:
   delay(10 * TIME_SECOND);
@@ -85,13 +91,7 @@ void loop() {
 
   checkTemperature(&status);
 
-  {
-    float voltage = -1.00;
-    voltage = vibrationSensor.getVibrationReading();
-    status[VIBRATION_INDEX] = vibrationSensor.convertReadingToChar(voltage);
-    Serial.print("Vibration reading: ");
-    Serial.println(voltage);
-  }
+  checkVibration(&status);
 
   {
     int messageSent = sigfox.sendMessage(status);

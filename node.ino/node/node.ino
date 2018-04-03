@@ -31,10 +31,8 @@ const int MAX_MESSAGE_LENGTH = 12;
 void heartbeatWait() {
 
   for (int index = 0; index < 10; index++) {
-   Serial.print(".");
    delay(TIME_MINUTE); 
   }
-  Serial.println("");
   
 }
 

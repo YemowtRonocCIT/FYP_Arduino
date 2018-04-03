@@ -42,20 +42,26 @@ void setup() {
   vibrationSensor.begin(VIBRATION_PIN);
 }
 
-bool checkButtonPressed(char (*status)[MAX_MESSAGE_LENGTH]) {
+bool checkButtonPressed() {
   bool pressed = false;
-  char character = 'N';
   int buttonPressed = buttonPress.isPressed();
   
   if (buttonPressed == 1) 
   {
-    character = 'B';
     pressed = true;
+  }
+  
+  return pressed;
+}
+
+void encodeButtonPressed(char (*status)[MAX_MESSAGE_LENGTH], bool pressed) {
+  char character = 'N';
+
+  if (pressed == true) {
+    character = 'B';
   }
 
   (*status)[BUTTON_INDEX] = character;
-  
-  return pressed;
 }
 
 void checkTemperature(char (*status)[MAX_MESSAGE_LENGTH]) {
@@ -87,7 +93,8 @@ void loop() {
     status[index] = '\0';
   }
   
-  bool buttonPressed = checkButtonPressed(&status);
+  bool buttonPressed = checkButtonPressed();
+  encodeButtonPressed(&status, buttonPressed);
 
   checkTemperature(&status);
 

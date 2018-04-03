@@ -83,9 +83,6 @@ int sendMessage(char (*status)[MAX_MESSAGE_LENGTH]) {
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
-  delay(10 * TIME_SECOND);
-
   char status[MAX_MESSAGE_LENGTH];
 
   int index;

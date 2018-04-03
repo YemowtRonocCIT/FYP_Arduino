@@ -76,6 +76,11 @@ void checkVibration(char (*status)[MAX_MESSAGE_LENGTH]) {
     (*status)[VIBRATION_INDEX] = vibrationSensor.convertReadingToChar(voltage);  
 }
 
+int sendMessage(char (*status)[MAX_MESSAGE_LENGTH]) {
+  int messageStatus = sigfox.sendMessage(*status);
+  return messageStatus;
+}
+
 void loop() {
   // put your main code here, to run repeatedly:
   delay(10 * TIME_SECOND);
@@ -93,13 +98,10 @@ void loop() {
 
   checkVibration(&status);
 
-  {
-    int messageSent = sigfox.sendMessage(status);
-    if (messageSent > 0) {
-      Serial.println("Message was not sent");
-    } else {
-      Serial.println("Message sent");
-    }
+  int messageSent = sendMessage(&status);
+  if (messageSent > 0) {
+    // If not sent, try again.
+    sendMessage(&status);
   }
 
   heartbeatWait();

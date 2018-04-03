@@ -37,9 +37,6 @@ void heartbeatWait() {
 }
 
 void setup() {
-  // put your setup code here, to run once:
-  Serial.begin(9600);
-  SigFox.debug();
   buttonPress.begin(BUTTON_PIN);
   temperatureSensor.begin(TEMP_PIN, sensors);
   vibrationSensor.begin(VIBRATION_PIN);

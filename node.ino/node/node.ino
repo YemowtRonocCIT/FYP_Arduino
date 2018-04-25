@@ -9,6 +9,7 @@
 const int TIME_SECOND = 1000;
 const int TIME_MINUTE = TIME_SECOND * 60;
 const int TIME_HOUR = TIME_MINUTE * 60;
+const int HEARTBEAT_TIME_MINUTES = 10;
 
 
 const int BUTTON_PIN = 7;
@@ -44,7 +45,7 @@ void heartbeatWait(bool buttonPressed) {
 
   if (buttonPressed == true) {
     Serial.println("Button pressed waiting");
-    for (int index = 0; index < 7; index++) {
+    for (int index = 0; index < HEARTBEAT_TIME_MINUTES; index++) {
       for (int iteration = 0; iteration < 6; iteration++) {
         buttonPressed = checkButtonPressed();
         if (buttonPressed == false) {
@@ -61,7 +62,7 @@ void heartbeatWait(bool buttonPressed) {
   }
   else {
    Serial.println("Button not pressed waiting");
-   for (int index = 0; index < 7; index++) {
+   for (int index = 0; index < HEARTBEAT_TIME_MINUTES; index++) {
     delay(TIME_MINUTE); 
     Serial.println(".");
    } 

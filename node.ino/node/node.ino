@@ -28,20 +28,6 @@ VibrationSensor vibrationSensor;
 SigfoxMessage sigfox;
 const int MAX_MESSAGE_LENGTH = 12;
 
-void heartbeatWait() {
-
-  for (int index = 0; index < 10; index++) {
-   delay(TIME_MINUTE); 
-  }
-  
-}
-
-void setup() {
-  buttonPress.begin(BUTTON_PIN);
-  temperatureSensor.begin(TEMP_PIN, sensors);
-  vibrationSensor.begin(VIBRATION_PIN);
-}
-
 bool checkButtonPressed() {
   bool pressed = false;
   int buttonPressed = buttonPress.isPressed();
@@ -52,6 +38,34 @@ bool checkButtonPressed() {
   }
   
   return pressed;
+}
+
+void heartbeatWait(bool buttonPressed) {
+
+  if (buttonPressed == true) {
+    Serial.println("Button pressed waiting");
+    for (int index = 0; index < 7; index++) {
+      for (int iteration = 0; iteration < 6; iteration++) {
+        buttonPressed = checkButtonPressed();
+        if (buttonPressed == false) {
+          break;
+        }
+        delay(TIME_SECOND * 10);
+      }
+      
+      Serial.println(".");
+      if (buttonPressed == false) {
+        break;
+      }
+    }
+  }
+  else {
+   Serial.println("Button not pressed waiting");
+   for (int index = 0; index < 7; index++) {
+    delay(TIME_MINUTE); 
+    Serial.println(".");
+   } 
+  }  
 }
 
 void encodeButtonPressed(char (*status)[MAX_MESSAGE_LENGTH], bool pressed) {
@@ -82,26 +96,41 @@ int sendMessage(char (*status)[MAX_MESSAGE_LENGTH]) {
   return messageStatus;
 }
 
+void setup() {
+  buttonPress.begin(BUTTON_PIN);
+  temperatureSensor.begin(TEMP_PIN, sensors);
+  vibrationSensor.begin(VIBRATION_PIN);
+  Serial.begin(9600);
+  SigFox.debug();
+}
+
 void loop() {
+
+  delay(TIME_SECOND * 10);
   char status[MAX_MESSAGE_LENGTH];
 
   int index;
   for (index = 0; index < MAX_MESSAGE_LENGTH; index++) {
     status[index] = '\0';
   }
-  
+
+  Serial.println("Checking button");
   bool buttonPressed = checkButtonPressed();
   encodeButtonPressed(&status, buttonPressed);
 
+  Serial.println("Checking Temperature");
   checkTemperature(&status);
 
+  Serial.println("Checking Vibration");
   checkVibration(&status);
 
+  Serial.println("Sending Message");
   int messageSent = sendMessage(&status);
   if (messageSent > 0) {
     // If not sent, try again.
+    delay(TIME_SECOND * 10);
     sendMessage(&status);
   }
 
-  heartbeatWait();
+  heartbeatWait(buttonPressed);
 }

@@ -46,12 +46,12 @@ void heartbeatWait(bool buttonPressed) {
   if (buttonPressed == true) {
     Serial.println("Button pressed waiting");
     for (int index = 0; index < HEARTBEAT_TIME_MINUTES; index++) {
-      for (int iteration = 0; iteration < 6; iteration++) {
+      for (int iteration = 0; iteration < 30; iteration++) {
         buttonPressed = checkButtonPressed();
         if (buttonPressed == false) {
           break;
         }
-        delay(TIME_SECOND * 10);
+        delay(TIME_SECOND * 2);
       }
       
       Serial.println(".");
